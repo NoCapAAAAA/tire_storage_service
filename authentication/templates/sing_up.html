@@ -1,0 +1,107 @@
+{% extends 'base_client.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Регистрация {% endblock %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+{% block main %}
+<main class="d-flex justify-content-center">
+<form action="" id="sing-up" method="post" class=" mb-4" style="width: 400px;">
+    <h1 class="my-4 text-center">Регистрация</h1>
+    {% csrf_token %}
+
+            <div class="form-group">
+                {{ form.username|as_crispy_field }}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.first_name.id_for_label }}">Имя</label>
+              <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}" minlength="2" maxlength="20" class="form-control" onkeydown="return /[a-zA-Zа-яА-Я]/.test(event.key)" required>
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.last_name.id_for_label }}">Фамилия</label>
+              <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}" minlength="2" maxlength="20" class="form-control" onkeydown="return /[a-zA-Zа-яА-Я]/.test(event.key)" required>
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.email.id_for_label }}">Электронная почта</label>
+              <input type="email" name="{{ form.email.name }}" id="email" minlength="2" maxlength="20" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="{{ form.phone_number.id_for_label }}">Номер телефона</label>
+              <input type="text" name="{{ form.phone_number.name }}" id="{{ form.phone_number.id_for_label }}" minlength="16" maxlength="16" class="form-control" required>
+            </div>
+            <div class="form-group">
+                {{ form.password1|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                {{ form.password2|as_crispy_field }}
+            </div>
+            <div class="form-group">
+                {{ form.recaptcha|as_crispy_field }}
+            </div>
+
+    <input class="btn btn-primary mt-3" type="submit" value="Зарегистрироваться">
+</form>
+
+</main>
+
+<script>
+  // Получаем ссылку на форму
+  var form = document.getElementById('sing-up');
+  var phoneNumberInput = document.getElementById('id_phone_number');
+  var emailInput = document.getElementById('email');
+
+  // Обработчик события oninput для поля phone_number
+  phoneNumberInput.addEventListener('input', function(event) {
+    formatPhoneNumber(event.target);
+    validatePhoneNumber(event.target);
+  });
+
+  // Обработчик события oninput для поля email
+  emailInput.addEventListener('input', function(event) {
+    validateEmail(event.target);
+  });
+
+  // Функция для форматирования поля phone_number
+  function formatPhoneNumber(input) {
+    var phoneNumber = input.value.trim().replace(/[^0-9]/g, ''); // Удаляем все символы, кроме цифр
+    var formattedPhoneNumber = '+7 (' + phoneNumber.slice(1, 4) + ') ' + phoneNumber.slice(4); // Форматируем номер
+
+    input.value = formattedPhoneNumber;
+  }
+
+  // Функция для валидации поля phone_number
+  function validatePhoneNumber(input) {
+    var phoneNumber = input.value.trim().replace(/[^0-9]/g, ''); // Удаляем все символы, кроме цифр
+
+    if (phoneNumber.length !== 11) {
+      input.classList.add('is-invalid');
+    } else {
+      input.classList.remove('is-invalid');
+    }
+  }
+
+  // Функция для валидации поля email
+  function validateEmail(input) {
+    var email = input.value.trim();
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Регулярное выражение для валидации email
+
+    if (!emailRegex.test(email)) {
+      input.classList.add('is-invalid');
+    } else {
+      input.classList.remove('is-invalid');
+    }
+  }
+
+  // Обработчик отправки формы
+  form.addEventListener('submit', function(event) {
+    if (phoneNumberInput.classList.contains('is-invalid') || emailInput.classList.contains('is-invalid')) {
+      event.preventDefault(); // Отменяем отправку формы, если валидация не пройдена
+    }
+  });
+
+</script>
+
+{% endblock %}

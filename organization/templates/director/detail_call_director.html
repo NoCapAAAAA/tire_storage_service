@@ -1,0 +1,51 @@
+{% extends 'director/base_director.html' %}
+{% load static %}
+{% block title %} Обратная связь {% endblock %}
+{% block main %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                        <a href="{% url 'director_list_call_app' %}" class="btn btn-xs btn-secondary">Назад к списку</a>
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Обращение №{{call.pk}}</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ call.topic }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ call.phone_number }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ call.first_name }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ call.last_name }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ call.email }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ call.msg }}
+                                        </div>
+                                    </div>
+
+                                        <div class="form-group">
+                                            {{ call.msg }}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

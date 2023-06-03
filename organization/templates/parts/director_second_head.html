@@ -1,0 +1,68 @@
+<div class="navigation">
+	<div class="navigation-header"> <span>Навигация</span>
+		<a href="#"> <i class="ti-close"></i> </a>
+	</div>
+	<div class="navigation-menu-body">
+		<ul>
+			<li>
+				<a class="active" href="{% url 'director_home' %}"> <span class="nav-link-icon">
+                  <i data-feather="pie-chart"></i>
+                    </span> <span>Панель управления</span> </a>
+			</li>
+            <li>
+                <a href="{% url 'director_create_employee' %}">
+                    <span class="nav-link-icon">
+                        <i data-feather="edit-3"></i>
+                    </span>
+                    <span>Список пользователей</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-link-icon">
+                        <i data-feather="layers"></i>
+                    </span>
+                    <span>Отчёты</span>
+                </a>
+                <ul>
+                    <li>
+                        <a  href="{% url 'report_generate' %}">Заказы</a>
+                    </li>
+                    <li>
+                        <a  href="{% url 'director_users_report_view' %}">Пользователи</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="{% url 'director_list_employee_view' %}">
+                    <span class="nav-link-icon">
+                        <i data-feather="edit-3"></i>
+                    </span>
+                    <span>Список сотрудников</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="nav-link-icon">
+                        <i data-feather="layers"></i>
+                    </span>
+                    <span>Справочники</span>
+                </a>
+                <ul>
+                    <li>
+                        <a  href="{% url 'director_orders_report_view' %}">Срок хранения</a>
+                    </li>
+                    <li>
+                        <a  href="{% url 'director_users_report_view' %}">Размеры</a>
+                    </li>
+                    <li>
+                        <a  href="{% url 'director_users_report_view' %}">Количество</a>
+                    </li>
+                    <li>
+                        <a  href="{% url 'director_users_report_view' %}">Адреса сервисов</a>
+                    </li>
+                </ul>
+            </li>
+		</ul>
+	</div>
+</div>

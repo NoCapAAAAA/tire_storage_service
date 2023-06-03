@@ -1,0 +1,80 @@
+{% extends 'base_client.html' %}
+{% load static %}
+{% block title %} Мой аккаунт {% endblock %}
+
+{% block main %}
+<div class="block">
+	<div class="container">
+		<div class="row">
+
+			{% include 'client_abstract_main.html' %}
+			<div class="col-12 col-lg-9 mt-4 mt-lg-0">
+				<div class="dashboard">
+					<div class="dashboard__profile card profile-card">
+						<div class="card-body profile-card__body">
+							<div class="profile-card__avatar">
+								    <img src = "{{ user.get_photo_url }}" class ="img-responsive thumbnail " alt="img" >
+							</div>
+							<div class="profile-card__name">{{ user.username }}</div>
+							<div class="profile-card__email">{{ user.email }}</div>
+							<div class="profile-card__edit">
+								<a href="{% url 'client_edit_profile' %}" class="btn btn-secondary btn-sm">Редактировать профиль</a>
+							</div>
+						</div>
+					</div>
+					<div class="dashboard__address card address-card address-card--featured">
+						<div class="address-card__badge">Детальная информация</div>
+						<div class="address-card__body">
+							<div class="address-card__name">{{ user.first_name }} {{ user.last_name }}</div>
+							<div class="address-card__row">
+							</div>
+							<div class="address-card__row">
+								<div class="address-card__row-title">Номер телефона</div>
+								<div class="address-card__row-content">{{ user.phone_number }}</div>
+							</div>
+							<div class="address-card__row">
+								<div class="address-card__row-title">Эл. адрес</div>
+								<div class="address-card__row-content">{{ user.email }}</div>
+							</div>
+							<div class="address-card__row">
+								<div class="address-card__row-title">Пол</div>
+								<div class="address-card__row-content">{{ user.get_gender_display }}</div>
+							</div>
+						</div>
+					</div>
+					<div class="dashboard__orders card">
+						<div class="card-header">
+							<h5>Поседние заказы</h5>
+						</div>
+						<div class="card-divider"></div>
+						<div class="card-table">
+							<div class="table-responsive-sm">
+								<table>
+									<thead>
+										<tr>
+											<th>№</th>
+											<th>Дата</th>
+											<th>Статус</th>
+											<th>Стоимость</th>
+										</tr>
+									</thead>
+									<tbody>
+									{% for 3 in last_orders %}
+										<tr>
+											<td><a href="{{ 3.pk }}">#{{ 3.pk }}</a></td>
+											<td>{{ 3.created_at }}</td>
+											<td>{{ 3.get_status_display }}</td>
+											<td>{{ 3.price }}</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
