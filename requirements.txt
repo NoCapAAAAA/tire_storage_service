@@ -18,3 +18,4 @@ fpdf
 Redis
 faker
 django-environ
+transliterate
