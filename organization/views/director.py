@@ -409,7 +409,7 @@ def generate_report(request):
             row_cells[1].text = str(order.user.first_name)
             row_cells[2].text = str(order.size) + ' R'
             row_cells[3].text = str(order.period) + ' мес.'
-            row_cells[4].text = str(order.adress)
+            row_cells[4].text = str(order.address)
             row_cells[5].text = str(order.get_status_display())
             row_cells[6].text = str(order.created_at.strftime ("%Y - %m - %d, %H:%M"))
             row_cells[7].text = str(order.price) + ' руб.'
