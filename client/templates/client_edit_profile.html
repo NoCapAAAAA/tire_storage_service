@@ -27,17 +27,22 @@
             {% include 'client_abstract_main.html' %}
             <div class="col-12 col-lg-9 mt-4 mt-lg-0">
                 <div class="row">
-                    <form action="" method="post" class="row" enctype="multipart/form-data">
+                    <form action="" method="post" id="edit" name="edit" class="row" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="col-6">
                             <div class="form-group">
-                                {{ form.last_name|as_crispy_field }}
+                              <label for="{{ form.last_name.id_for_label }}">Фамилия</label>
+                              <input type="text" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}" minlength="2" maxlength="20" class="form-control" onkeydown="return /[a-zA-Zа-яА-Я]/.test(event.key)" required>
                             </div>
+
                             <div class="form-group">
-                                {{ form.first_name|as_crispy_field }}
+                              <label for="{{ form.first_name.id_for_label }}">Имя</label>
+                              <input type="text" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}" minlength="2" maxlength="20" class="form-control" onkeydown="return /[a-zA-Zа-яА-Я]/.test(event.key)" required>
                             </div>
+
                             <div class="form-group">
-                                {{ form.middle_name|as_crispy_field }}
+                              <label for="{{ form.middle_name.id_for_label }}">Отчество</label>
+                              <input type="text" name="{{ form.middle_name.name }}" id="{{ form.middle_name.id_for_label }}" minlength="2" maxlength="20" class="form-control" onkeydown="return /[a-zA-Zа-яА-Я]/.test(event.key)">
                             </div>
                         </div>
                         <div class="col-6">
@@ -45,10 +50,13 @@
                                 {{ form.username|as_crispy_field }}
                             </div>
                             <div class="form-group">
-                                {{ form.phone_number|as_crispy_field }}
+                              <label for="{{ form.phone_number.id_for_label }}">Номер телефона</label>
+                              <input type="text" name="{{ form.phone_number.name }}" id="{{ form.phone_number.id_for_label }}" minlength="16" maxlength="16" class="form-control" required>
                             </div>
+
                             <div class="form-group">
-                                {{ form.email|as_crispy_field }}
+                              <label for="{{ form.email.id_for_label }}">Электронная почта</label>
+                              <input type="email" name="{{ form.email.name }}" id="email" minlength="2" maxlength="20" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-12">
@@ -61,5 +69,60 @@
     </div>
 </div>
 
+<script>
+  // Получаем ссылку на форму
+  var form = document.getElementById('edit');
+  var phoneNumberInput = document.getElementById('id_phone_number');
+  var emailInput = document.getElementById('email');
 
+  // Обработчик события oninput для поля phone_number
+  phoneNumberInput.addEventListener('input', function(event) {
+    formatPhoneNumber(event.target);
+    validatePhoneNumber(event.target);
+  });
+
+  // Обработчик события oninput для поля email
+  emailInput.addEventListener('input', function(event) {
+    validateEmail(event.target);
+  });
+
+  // Функция для форматирования поля phone_number
+  function formatPhoneNumber(input) {
+  var phoneNumber = input.value.trim().replace(/[^0-9]/g, ''); // Удаляем все символы, кроме цифр
+  var formattedPhoneNumber = '+7(' + phoneNumber.slice(1, 4) + ')' + phoneNumber.slice(4, 7) + '-' + phoneNumber.slice(7, 9) + '-' + phoneNumber.slice(9); // Форматируем номер
+
+  input.value = formattedPhoneNumber;
+}
+
+  // Функция для валидации поля phone_number
+  function validatePhoneNumber(input) {
+    var phoneNumber = input.value.trim().replace(/[^0-9]/g, ''); // Удаляем все символы, кроме цифр
+
+    if (phoneNumber.length !== 11) {
+      input.classList.add('is-invalid');
+    } else {
+      input.classList.remove('is-invalid');
+    }
+  }
+
+  // Функция для валидации поля email
+  function validateEmail(input) {
+    var email = input.value.trim();
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Регулярное выражение для валидации email
+
+    if (!emailRegex.test(email)) {
+      input.classList.add('is-invalid');
+    } else {
+      input.classList.remove('is-invalid');
+    }
+  }
+
+  // Обработчик отправки формы
+  form.addEventListener('submit', function(event) {
+    if (phoneNumberInput.classList.contains('is-invalid') || emailInput.classList.contains('is-invalid')) {
+      event.preventDefault(); // Отменяем отправку формы, если валидация не пройдена
+    }
+  });
+
+</script>
 {% endblock %}
