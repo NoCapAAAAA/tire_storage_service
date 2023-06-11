@@ -30,6 +30,9 @@ class OrderCreateForm(forms.ModelForm):
     status = forms.IntegerField(widget=forms.HiddenInput())
     payed_at = forms.DateTimeField(widget=forms.HiddenInput(), required=False)
     price = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+    period = forms.ModelChoiceField(queryset=m.PeriodOfStorage.objects.order_by('period'), label='Период')
+    size = forms.ModelChoiceField(queryset=m.TireSize.objects.order_by('size'), label='Размер шин')
+    quantity = forms.ModelChoiceField(queryset=m.QuantityOfTires.objects.order_by('quantity'), label='Количество шин')
 
     class Meta:
         model = m.OrderStorage

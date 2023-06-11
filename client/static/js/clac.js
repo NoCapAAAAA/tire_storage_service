@@ -1,14 +1,23 @@
 $(document).ready(function() {
   // Функция для обновления стоимости
   function updateCost() {
-    var size = $('#id_size option:selected').text();
-    var quantity = $('#id_quantity option:selected').text();
-    var period = $('#id_period option:selected').text();
+    var size = parseInt($('#id_size option:selected').text());
+    var quantity = parseInt($('#id_quantity option:selected').text());
+    var period = parseInt($('#id_period option:selected').text());
     var address = $('#id_adress option:selected').text();
+    var cost;
 
-    // Ваш код для расчета стоимости на основе выбранных параметров
-    // Пример расчета стоимости: (просто для иллюстрации)
-    var cost = parseInt(size) * parseInt(quantity) * parseInt(period);
+    if (period * 30 > 30) {
+      // Вычисление стоимости с условием period * 30 > 30
+      cost = size * period * quantity / 1.5;
+    } else if (period * 30 === 30) {
+      // Вычисление стоимости с условием period * 30 = 30
+      cost = size * period * quantity;
+    } else {
+      // Другое значение period
+      // Здесь можно добавить обработку других условий, если необходимо
+      cost = 0;
+    }
 
     // Обновление отображения стоимости
     $('#summ').text(cost + ' руб');

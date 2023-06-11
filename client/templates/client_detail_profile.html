@@ -59,14 +59,15 @@
 										</tr>
 									</thead>
 									<tbody>
-									{% for 3 in last_orders %}
+									{% for order in last_orders %}
 										<tr>
-											<td><a href="{{ 3.pk }}">#{{ 3.pk }}</a></td>
-											<td>{{ 3.created_at }}</td>
-											<td>{{ 3.get_status_display }}</td>
-											<td>{{ 3.price }}</td>
+											<td><a href="{{ '/order-list/' }}{{ order.pk }}">#{{ order.pk }}</a></td>
+											<td>{{ order.created_at }}</td>
+											<td>{{ order.get_status_display }}</td>
+											<td>{{ order.price }}</td>
 										</tr>
 									{% endfor %}
+
 									</tbody>
 								</table>
 							</div>

@@ -4,7 +4,7 @@ from django.shortcuts import render
 from docx.shared import Cm
 from service.filters import UsersFilterDirector
 from service.decorators import group_required
-from service.charts import months, colorPrimary, colorSuccess, colorDanger, generate_color_palette, get_year_dict
+from service.charts import months, colorPrimary, get_year_dict
 from django.contrib.auth.models import Group
 from organization import forms as f
 from django.utils.decorators import method_decorator
@@ -19,6 +19,10 @@ from django.db.models import Count, Sum
 from django.db.models.functions import ExtractYear, ExtractMonth
 from authentication.models import User as Users
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
+from docx import Document
+from docx.shared import Inches
+from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 User = get_user_model()
 
 
@@ -59,7 +63,6 @@ class DirectorHomeView(TemplateView):
             created_at__year=last_year.year - 1
         ).aggregate(Sum('price'))['price__sum']
         context['callaplication'] = m.CallApplication.objects.order_by('-pk')[:5]
-        print(context)
         return context
 
 
@@ -156,11 +159,11 @@ class DirectorEmployeeDetailView(UpdateView):
 
     def form_valid(self, form):
         user = form.save(commit=False)
-        user.groups.clear()  # очищаем группы пользователя
-        groups = self.request.POST.getlist('groups')  # получаем список выбранных групп
+        user.groups.clear()
+        groups = self.request.POST.getlist('groups')
         for group_id in groups:
             group = Group.objects.get(id=group_id)
-            user.groups.add(group)  # добавляем пользователя в группы
+            user.groups.add(group)
         return super().form_valid(form)
 
     def post(self, request, *args, **kwargs):
@@ -211,7 +214,6 @@ class DirectorDetailCallApplicationView(DetailView):
     context_object_name = 'call'
 
 
-
 class DirectorUsersReportView(TemplateView):
     @method_decorator(group_required('Директор'))
     def dispatch(self, request, *args, **kwargs):
@@ -219,114 +221,6 @@ class DirectorUsersReportView(TemplateView):
 
     template_name = 'director/report.html'
 
-
-def create_report(request):
-    locale.setlocale(
-        category=locale.LC_ALL,
-        locale="Russian"  # Note: do not use "de_DE" as it doesn't work
-    )
-    current_datetime = datetime.now()
-    str_current_datetime = str(current_datetime)
-    document = Document()
-    docx_title = "report" + str_current_datetime + ".docx"
-    # ---- Cover Letter ----
-    document.add_paragraph()
-    document.add_paragraph("%s" % date.today().strftime('%B %d, %Y'))
-
-    document.add_paragraph('Отчёт о заказах')
-    orders = m.OrderStorage.objects.all().order_by('pk')
-    orders_count = orders.count()
-    table = document.add_table(rows=orders_count + 1, cols=8)
-    table.style = 'Table Grid'
-    table.cell(0, 0).text = 'Номер заказа'
-    table.cell(0, 1).text = 'Клиент'
-    table.cell(0, 2).text = 'Размер шины'
-    table.cell(0, 3).text = 'Период хранения'
-    table.cell(0, 4).text = 'Адрес сервиса'
-    table.cell(0, 5).text = 'Статус заказа'
-    table.cell(0, 6).text = 'Стоимость заказа'
-    table.cell(0, 7).text = 'Оплачен'
-
-    # Adding data to the table
-    for i, order in enumerate(orders, start=1):
-        table.cell(i, 0).text = str(order.pk)
-        table.cell(i, 1).text = str(order.user)
-        table.cell(i, 2).text = str(order.size)
-        table.cell(i, 3).text = str(f"{str(order.period)} мес.")
-        table.cell(i, 4).text = str(order.adress) if order.adress else "---"
-        table.cell(i, 5).text = str(order.get_status_display())
-        table.cell(i, 6).text = str(f"{str(order.price)} ₽")
-        table.cell(i, 7).text = "Да" if order.is_payed else "Нет"
-
-    document.add_page_break()
-
-    # Prepare document for download
-    # -----------------------------
-    f = BytesIO()
-    document.save(f)
-    length = f.tell()
-    f.seek(0)
-    response = HttpResponse(
-        f.getvalue(),
-        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    )
-    response['Content-Disposition'] = 'attachment; filename=' + docx_title
-    response['Content-Length'] = length
-    return response
-
-
-def create_report_users(request):
-    locale.setlocale(
-        category=locale.LC_ALL,
-        locale="Russian"  # Note: do not use "de_DE" as it doesn't work
-    )
-    current_datetime = datetime.now()
-    str_current_datetime = str(current_datetime)
-    document = Document()
-    docx_title = "report" + str_current_datetime + ".docx"
-    # ---- Cover Letter ----
-    document.add_paragraph()
-    document.add_paragraph("%s" % date.today().strftime('%B %d, %Y'))
-
-    document.add_paragraph('Отчёт о пользователях')
-
-    users_count = Users.objects.all().order_by('pk').count()
-
-    table = document.add_table(rows=users_count + 1, cols=8)
-    table.style = 'Table Grid'
-    table.cell(0, 0).text = 'ID'
-    table.cell(0, 1).text = 'Имя'
-    table.cell(0, 2).text = 'Фамилия'
-    table.cell(0, 3).text = 'Отчество'
-    table.cell(0, 4).text = 'Телефон'
-    table.cell(0, 5).text = 'Email'
-    table.cell(0, 6).text = 'Пол'
-
-    # Adding data to the table
-    for i, user in enumerate(Users.objects.all(), start=1):
-        table.cell(i, 0).text = str(user.pk)
-        table.cell(i, 1).text = str(user.first_name)
-        table.cell(i, 2).text = str(user.last_name)
-        table.cell(i, 3).text = str(user.middle_name)
-        table.cell(i, 4).text = str(user.phone_number)
-        table.cell(i, 5).text = str(user.email)
-        table.cell(i, 6).text = str(user.gender)
-
-    document.add_page_break()
-
-    # Prepare document for download
-    # -----------------------------
-    f = BytesIO()
-    document.save(f)
-    length = f.tell()
-    f.seek(0)
-    response = HttpResponse(
-        f.getvalue(),
-        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    )
-    response['Content-Disposition'] = 'attachment; filename=' + docx_title
-    response['Content-Length'] = length
-    return response
 
 def get_filter_options(request):
     grouped_purchases = m.OrderStorage.objects.annotate(year=ExtractYear("created_at")).values("year").order_by("-year").distinct()
@@ -359,12 +253,6 @@ def get_sales_chart(request, year):
             }]
         },
     })
-
-
-from django.http import HttpResponse
-from docx import Document
-from docx.shared import Inches
-from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 
 
 def generate_report(request):

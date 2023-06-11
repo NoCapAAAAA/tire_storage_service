@@ -71,6 +71,7 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
     form_class = f.OrderCreateForm
     queryset = m.OrderStorage.objects.all()
 
+
     def form_valid(self, form):
         if form.is_valid():
             size = int(str(form.cleaned_data['size']))
@@ -88,7 +89,6 @@ class OrderCreateView(LoginRequiredMixin, CreateView):
 
     def get_form_kwargs(self, ):
         ret = super().get_form_kwargs()
-        print(ret)
         ret['initial'] = {
             'user': self.request.user.pk,
             'status': m.OrderStatus.CREATE,
@@ -126,7 +126,6 @@ def order_pay_tire(request, pk):
     order.cheque.name = check_filename
     order.save()
 
-    # Отправка почты с вложенным PDF-чеком
     subject = f'Ваш заказ №{pk} и чек '
     message = 'Спасибо за ваш заказ! Мы рады что вы выбрали именно нас! \n' \
               'Ваш чек прикреплён к данному письму'

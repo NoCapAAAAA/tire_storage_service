@@ -7,7 +7,17 @@ $(document).ready(function() {
 
     // Ваш код для расчета стоимости на основе выбранных параметров
     // Пример расчета стоимости: (просто для иллюстрации)
-    var cost = parseInt(size) * parseInt(quantity) * parseInt(period);
+    if (period * 30 > 30) {
+      // Вычисление стоимости с условием period * 30 > 30
+      cost = size * period * quantity / 1.5;
+    } else if (period * 30 === 30) {
+      // Вычисление стоимости с условием period * 30 = 30
+      cost = size * period * quantity;
+    } else {
+      // Другое значение period
+      // Здесь можно добавить обработку других условий, если необходимо
+      cost = 0;
+    }
 
     // Обновление отображения стоимости
     $('#summ').text(cost + ' руб');

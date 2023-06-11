@@ -98,8 +98,6 @@ class ManagerCreateUserView(CreateView):
     form_class = f.CreateUserForm
 
 
-# Список пользователей с возможностью поиска по полю 'id' и филдьтрацией по полю 'gender',
-# так же предусмотрена пагинация в 7 объектов
 class ManagerUsersListView(ListView):
     @method_decorator(group_required('Менеджер'))
     def dispatch(self, request, *args, **kwargs):
