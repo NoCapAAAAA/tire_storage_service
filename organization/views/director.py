@@ -12,16 +12,13 @@ from django.views.generic import UpdateView, ListView, TemplateView, CreateView,
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.utils import timezone
-from io import BytesIO
-from datetime import datetime, date
-import locale
 from django.db.models import Count, Sum
 from django.db.models.functions import ExtractYear, ExtractMonth
-from authentication.models import User as Users
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from docx import Document
 from docx.shared import Inches
+from datetime import datetime
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 User = get_user_model()
 
@@ -86,47 +83,6 @@ class DirectorUsersListView(ListView):
         self.no_search_result = True if not search_results.qs else False
         return search_results.qs.distinct()
 
-# Директор листает дропдаун со справочниками,
-# нажимает на нужный ему перекидывает на Лист существующих,
-# так же кнопка создать новый, есть возможность удалить существующий либо изменить
-
-class DirectorCreateSizeView(CreateView):
-    @method_decorator(group_required('Директор'))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    template_name = 'manager/create_user_manager.html'
-    success_url = reverse_lazy('director_list_size')
-    form_class = f.CreateUserForm
-
-
-class DirectorCreatePeriodView(CreateView):
-    @method_decorator(group_required('Директор'))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    template_name = 'manager/create_user_manager.html'
-    success_url = reverse_lazy('director_list_size')
-    form_class = f.CreateUserForm
-
-
-class DirectorCreateAdressView(CreateView):
-    @method_decorator(group_required('Директор'))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    template_name = 'manager/create_user_manager.html'
-    success_url = reverse_lazy('director_list_size')
-    form_class = f.CreateUserForm
-
-
-class DirectorCreateQuantityView(CreateView):
-    @method_decorator(group_required('Директор'))
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-    template_name = 'manager/create_user_manager.html'
-    success_url = reverse_lazy('director_list_size')
-    form_class = f.CreateUserForm
-
-
-###
 
 class DirectorUpdateUserView(UpdateView):
     @method_decorator(group_required('Директор'))
@@ -214,13 +170,125 @@ class DirectorDetailCallApplicationView(DetailView):
     context_object_name = 'call'
 
 
-class DirectorUsersReportView(TemplateView):
+class DirectorListAddressView(ListView):
     @method_decorator(group_required('Директор'))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
-    template_name = 'director/report.html'
+    template_name = 'director/references/address_list.html'
+    model = m.AddressService
+    paginate_by = 7
+    context_object_name = 'address'
 
+
+class DirectorCreateAddressView(CreateView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/address_create.html'
+    model = m.AddressService
+
+
+class DirectorEditAddressView(UpdateView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/address_edit.html'
+    model = m.AddressService
+
+
+class DirectorListPeriodView(ListView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/period_list.html'
+    model = m.PeriodOfStorage
+    paginate_by = 7
+    context_object_name = 'period'
+
+
+class DirectorCreatePeriodView(CreateView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/period_create.html'
+    model = m.PeriodOfStorage
+
+
+class DirectorEditPeriodView(UpdateView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/period_edit.html'
+    model = m.PeriodOfStorage
+
+
+class DirectorListQuantityView(ListView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/quantity_list.html'
+    model = m.QuantityOfTires
+    paginate_by = 7
+    context_object_name = 'quantity'
+
+
+class DirectorCreateQuantityView(CreateView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/quantity_create.html'
+    model = m.QuantityOfTires
+
+
+class DirectorEditQuantityView(UpdateView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/quantity_edit.html'
+    model = m.QuantityOfTires
+
+
+class DirectorListSizeView(ListView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/tire_size_list.html'
+    model = m.TireSize
+    paginate_by = 7
+    context_object_name = 'size'
+
+
+class DirectorCreateSizeView(CreateView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/tire_size_create.html'
+    model = m.TireSize
+
+
+class DirectorEditSizeView(UpdateView):
+    @method_decorator(group_required('Директор'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'director/references/tire_size_edit.html'
+    model = m.TireSize
+
+
+#################
+# ВСЁ ОСТАЛЬНОЕ
+#################
 
 def get_filter_options(request):
     grouped_purchases = m.OrderStorage.objects.annotate(year=ExtractYear("created_at")).values("year").order_by("-year").distinct()
@@ -276,7 +344,10 @@ def generate_report(request):
         document.add_paragraph(f'                                                                                                                 ИНН 928131283112')
         document.add_paragraph(f'                                                                                                                 ОГРНИП 928134567831283112')
         # Добавление заголовка
-        document.add_heading(f'Отчет о заказах с {date_from} по {date_until}', level=1)
+        date_from_formatted = datetime.strptime(date_from, "%Y-%m-%d").strftime("%d-%m-%Y")
+        date_until_formatted = datetime.strptime(date_until, "%Y-%m-%d").strftime("%d-%m-%Y")
+
+        document.add_heading(f'Отчет о заказах с {date_from_formatted} по {date_until_formatted}', level=1)
 
         # Создание таблицы и добавление заголовков столбцов
         table = document.add_table(rows=1, cols=8)
@@ -299,7 +370,7 @@ def generate_report(request):
             row_cells[3].text = str(order.period) + ' мес.'
             row_cells[4].text = str(order.address)
             row_cells[5].text = str(order.get_status_display())
-            row_cells[6].text = str(order.created_at.strftime ("%Y - %m - %d, %H:%M"))
+            row_cells[6].text = str(order.created_at.strftime ("%Y-%m-%d"))
             row_cells[7].text = str(order.price) + ' руб.'
             total_cost += order.price
         document.add_paragraph(f'')
@@ -318,3 +389,73 @@ def generate_report(request):
         return response
 
     return render(request, 'director/report.html')
+
+
+def generate_report_users(request):
+    if request.method == 'POST':
+        date_from = request.POST.get('date_from')
+        date_until = request.POST.get('date_until')
+
+        # Получение заказов в выбранном диапазоне дат
+        users = User.objects.filter(date_joined__range=[date_from, date_until]).order_by('date_joined')
+
+        # Создание нового документа
+        document = Document()
+        table = document.add_table(rows=1, cols=1)
+        table.alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+
+        # Вставка картинки в ячейку таблицы
+        cell = table.cell(0, 0)
+        image_path = 'C:\\Users\\user\\Desktop\\каретников_диплом\\scr\\logo.png'
+        cell.paragraphs[0].add_run().add_picture(image_path, width=Inches(2), height=Inches(1))
+        document.add_paragraph(f'                                                                                                                 ООО ХРАНЕНИЕ ШИН')
+        document.add_paragraph(f'                                                                                                                 ИНН 928131283112')
+        document.add_paragraph(f'                                                                                                                 ОГРНИП 928134567831283112')
+        # Добавление заголовка
+
+
+        date_from_formatted = datetime.strptime(date_from, "%Y-%m-%d").strftime("%d-%m-%Y")
+        date_until_formatted = datetime.strptime(date_until, "%Y-%m-%d").strftime("%d-%m-%Y")
+
+        document.add_heading(f'Отчет о пользователях с {date_from_formatted} по {date_until_formatted}', level=1)
+
+
+        # Создание таблицы и добавление заголовков столбцов
+        table = document.add_table(rows=1, cols=7)
+        table.style = 'Table Grid'
+
+        # Установка размера таблицы
+        table.width = Cm(25)  # Установите ширину таблицы в сантиметрах
+        table.height = Cm(10)  # Установите высоту таблицы в сантиметрах
+
+        headers = ['ID', 'Фамилия', 'Имя', "Отчество", "Номер телефона", 'Email', 'Дата присоединения']
+        for i, header in enumerate(headers):
+            table.cell(0, i).text = header
+        total_cost = users.count()
+        # Заполнение таблицы данными
+        for i, user in enumerate(users):
+            row_cells = table.add_row().cells
+            row_cells[0].text = str(user.pk)
+            row_cells[1].text = str(user.first_name)
+            row_cells[2].text = str(user.last_name)
+            row_cells[3].text = str(user.middle_name)
+            row_cells[4].text = str(user.phone_number)
+            row_cells[5].text = str(user.email)
+            row_cells[6].text = str(user.date_joined.strftime("%d-%m-%Y"))
+
+        document.add_paragraph(f'')
+        document.add_paragraph(f'')
+        document.add_paragraph(f'')
+        document.add_paragraph(f'                                                                                            Итого: {total_cost} новых пользотвалей')
+
+
+        # Создание HTTP-ответа для скачивания документа
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        response['Content-Disposition'] = 'attachment; filename=report.docx'
+
+        # Сохранение документа в HTTP-ответе
+        document.save(response)
+
+        return response
+
+    return render(request, 'director/report_users.html')

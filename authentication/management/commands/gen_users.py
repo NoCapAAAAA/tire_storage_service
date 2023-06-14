@@ -49,8 +49,8 @@ class Command(BaseCommand):
         email = self.generate_email(username)
 
         # Генерация случайной даты и времени
-        start_date = datetime.datetime(2023, 1, 1)
-        end_date = datetime.datetime(2023, 12, 31)
+        start_date = datetime.datetime(2023, 4, 1)
+        end_date = datetime.datetime(2023, 6, 14)
         random_date = start_date + datetime.timedelta(
             seconds=random.randint(0, int((end_date - start_date).total_seconds()))
         )

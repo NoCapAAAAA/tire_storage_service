@@ -15,6 +15,7 @@ urlpatterns = [
     path('director/call-app-list/', director_views.DirectorListCallApplicationView.as_view(), name='director_list_call_app'),
     path('director/call-app-list/<int:pk>/', director_views.DirectorDetailCallApplicationView.as_view(), name='director_detail_call_app'),
     path('director/report-gen/', director_views.generate_report, name='report_generate'),
+    path('director/report-users/', director_views.generate_report_users, name='report_users'),
     # Test
     path("director/filter-options/", director_views.get_filter_options, name="chart-filter-options"),
     path("director/<int:year>/", director_views.get_sales_chart, name="chart-sales"),

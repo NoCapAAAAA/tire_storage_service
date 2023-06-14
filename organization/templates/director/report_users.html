@@ -1,8 +1,8 @@
 {% extends 'director/base_director.html' %}
 {% load static %}
-{% block title %} Создание отчёта по заказам {% endblock %}
+{% block title %} Создание отчёта по пользователям {% endblock %}
 {% block main %}
-<form id="report-form" class="my-4" action="{% url 'report_generate' %}" method="post" enctype="multipart/form-data">
+<form id="report-form" class="my-4" action="{% url 'report_users' %}" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <input type="date" name="date_from" id="date_from" required>
   <input type="date" name="date_until" id="date_until" required>

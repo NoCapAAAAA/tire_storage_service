@@ -1,0 +1,10 @@
+{% extends 'director/base_director.html' %}
+{% load static %}
+{% block title %} Добавление адреса {% endblock %}
+{% block main %}
+<form id="report-form" class="my-4" action="{% url 'report_generate' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <input type="submit" value="Добавить" class="btn btn-primary">
+</form>
+{% endblock %}
