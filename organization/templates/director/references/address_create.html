@@ -2,9 +2,9 @@
 {% load static %}
 {% block title %} Добавление адреса {% endblock %}
 {% block main %}
-<form id="report-form" class="my-4" action="{% url 'report_generate' %}" method="post" enctype="multipart/form-data">
+<form id="report-form" class="my-4"  method="post" enctype="multipart/form-data">
   {% csrf_token %}
-
+    {{form}}
   <input type="submit" value="Добавить" class="btn btn-primary">
 </form>
 {% endblock %}

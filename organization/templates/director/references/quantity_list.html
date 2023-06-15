@@ -1,10 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'director/base_director.html' %}
+{% load static %}
+{% block title %} Список количества {% endblock %}
+{% block main %}
+<div class="page-header d-md-flex justify-content-between">
+    <div>
+        <h3>Список количества</h3>
+        <nav aria-label="breadcrumb" class="d-flex align-items-start">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'director_home' %}">Главная</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Список количества</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="mt-2 mt-md-0">
+        <div class="dropdown">
+            <a href="{% url 'director_create_quantity' %}" class="btn btn-success " >Добавить</a>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="user-list" class="table table-lg">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Значение</th>
+                        </tr>
+                        </thead>
+                        {% for quantity in page_obj %}
+                        <tbody>
+                        <tr>
+                            <td><a href="{{ quantity.pk }}">№{{ quantity.pk }}</a></td>
+                            <td>{{quantity.quantity}}</td>
+                        </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nav aria-label="...">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-disabled="true">&lt;</a> </li>
+    {% endif %}
+    <li class="page-item active" aria-current="page"> <a class="page-link">{{ page_obj.number }}<span class="sr-only">(current)</span></a> </li>
+    {% if page_obj.has_next %}
+    <li class="page-item"> <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-disabled="true">&gt;</a> </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endblock %}

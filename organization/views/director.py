@@ -188,6 +188,9 @@ class DirectorCreateAddressView(CreateView):
 
     template_name = 'director/references/address_create.html'
     model = m.AddressService
+    fields = ('address',)
+    def get_success_url(self):
+        return reverse_lazy('director_list_address')
 
 
 class DirectorEditAddressView(UpdateView):
@@ -197,6 +200,9 @@ class DirectorEditAddressView(UpdateView):
 
     template_name = 'director/references/address_edit.html'
     model = m.AddressService
+    fields = ('address',)
+    def get_success_url(self):
+        return reverse_lazy('director_list_address')
 
 
 class DirectorListPeriodView(ListView):
@@ -217,6 +223,9 @@ class DirectorCreatePeriodView(CreateView):
 
     template_name = 'director/references/period_create.html'
     model = m.PeriodOfStorage
+    fields = ('period',)
+    def get_success_url(self):
+        return reverse_lazy('director_list_period')
 
 
 class DirectorEditPeriodView(UpdateView):
@@ -226,6 +235,9 @@ class DirectorEditPeriodView(UpdateView):
 
     template_name = 'director/references/period_edit.html'
     model = m.PeriodOfStorage
+    fields = ('period',)
+    def get_success_url(self):
+        return reverse_lazy('director_list_period')
 
 
 class DirectorListQuantityView(ListView):
@@ -246,6 +258,9 @@ class DirectorCreateQuantityView(CreateView):
 
     template_name = 'director/references/quantity_create.html'
     model = m.QuantityOfTires
+    fields = ('quantity',)
+    def get_success_url(self):
+        return reverse_lazy('director_list_quantity')
 
 
 class DirectorEditQuantityView(UpdateView):
@@ -255,6 +270,9 @@ class DirectorEditQuantityView(UpdateView):
 
     template_name = 'director/references/quantity_edit.html'
     model = m.QuantityOfTires
+    fields = ('quantity',)
+    def get_success_url(self):
+        return reverse_lazy('director_list_quantity')
 
 
 class DirectorListSizeView(ListView):
@@ -269,12 +287,18 @@ class DirectorListSizeView(ListView):
 
 
 class DirectorCreateSizeView(CreateView):
+    #
     @method_decorator(group_required('Директор'))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
     template_name = 'director/references/tire_size_create.html'
     model = m.TireSize
+    fields = ('size',)
+    def get_success_url(self):
+        return reverse_lazy('director_list_size')
+
+
 
 
 class DirectorEditSizeView(UpdateView):
@@ -284,6 +308,9 @@ class DirectorEditSizeView(UpdateView):
 
     template_name = 'director/references/tire_size_edit.html'
     model = m.TireSize
+    fields = ('size',)
+    def get_success_url(self):
+        return reverse_lazy('director_list_size')
 
 
 #################
